@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.example_blog.repository.ArticleDAO;
 import com.example.example_blog.repository.ArticleRepository;
-import com.example.example_blog.repository.NoPostFoundException;
+import com.example.example_blog.repository.NoArticleFoundException;
 import com.example.example_blog.service.AcquisitionFailedException;
 import com.example.example_blog.service.ArticleService;
 import com.example.example_blog.service.DeleteFailedException;
@@ -21,7 +21,7 @@ import com.example.example_blog.service.UpdateFailedException;
 public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
-	ArticleRepository articleRepository;
+	ArticleRepository repository;
 
 	//タイトルの最大文字数
 	private final int MAX_TITLE_SIZE = 30;
@@ -34,7 +34,7 @@ public class ArticleServiceImpl implements ArticleService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void addPost(String title, String content) {
+	public void addArticle(String title, String content) {
 
 		//タイトルがnullでも空値でもないことを確認する。
 		if (title == null || title.equals("")) {
@@ -59,7 +59,7 @@ public class ArticleServiceImpl implements ArticleService {
 		}
 
 		//記事を追加
-		articleRepository.addPost(title, content);
+		repository.addArticle(title, content);
 
 	}
 
@@ -67,7 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void modifyPost(int id, String title, String content) throws UpdateFailedException {
+	public void modifyArticle(int id, String title, String content) throws UpdateFailedException {
 
 		//タイトルがnullでも空値でもないことを確認する。
 		if (title == null || title.equals("")) {
@@ -97,9 +97,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 		try {
 			//記事の更新
-			articleRepository.modifyPost(id, title, content);
+			repository.modifyArticle(id, title, content);
 
-		} catch (NoPostFoundException e) {
+		} catch (NoArticleFoundException e) {
 			//指定されたIDの記事が見つからなかった場合
 			/*
 			 * スローする例外オブジェクトに、この例外をスローすることになった直接原因の例外情報を保持させる
@@ -114,7 +114,7 @@ public class ArticleServiceImpl implements ArticleService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ArticleDAO getPost(int id) throws AcquisitionFailedException {
+	public ArticleDAO getArticle(int id) throws AcquisitionFailedException {
 
 		//IDが1未満でないことを確認する。
 		if (id < 1) {
@@ -123,12 +123,12 @@ public class ArticleServiceImpl implements ArticleService {
 
 		try {
 			//記事の取得
-			ArticleDAO dao = articleRepository.getPost(id);
+			ArticleDAO dao = repository.getArticle(id);
 
 			//記事の返却
 			return dao;
 
-		} catch (NoPostFoundException e) {
+		} catch (NoArticleFoundException e) {
 			//指定されたIDの記事が見つからなかった場合
 			throw new AcquisitionFailedException(e);
 		}
@@ -138,10 +138,10 @@ public class ArticleServiceImpl implements ArticleService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ArticleDAO> getAllPosts() {
+	public List<ArticleDAO> getAllArticles() {
 
 		//記事リストの取得
-		List<ArticleDAO> daoList = articleRepository.getAllPosts();
+		List<ArticleDAO> daoList = repository.getAllArticles();
 
 		//記事リストの返却
 		return daoList;
@@ -151,7 +151,7 @@ public class ArticleServiceImpl implements ArticleService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deletePost(int id) throws DeleteFailedException {
+	public void deleteArticle(int id) throws DeleteFailedException {
 
 		//IDが1未満でないことを確認する。
 		if (id < 1) {
@@ -160,9 +160,9 @@ public class ArticleServiceImpl implements ArticleService {
 
 		try {
 			//削除の実行
-			articleRepository.deletePost(id);
+			repository.deleteArticle(id);
 
-		} catch (NoPostFoundException e) {
+		} catch (NoArticleFoundException e) {
 			//指定されたIDの記事が見つからなかった場合
 			throw new DeleteFailedException(e);
 
