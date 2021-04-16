@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>記事編集</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+</head>
+<body>
+
+	<div class="mx-5 my-3">
+
+		<div class="row justify-content-between">
+			<!-- 1.タイトル -->
+			<h1 class="col-auto">記事編集</h1>
+			<!-- 2.戻るボタン -->
+			<div class="col-auto align-self-center">
+				<a class="btn btn-primary" href="ShowArticles">戻る</a>
+			</div>
+		</div>
+
+		<!-- 3.横線 -->
+		<hr />
+
+		<!-- 4.メッセージ -->
+		<div th:switch="${messageType.name()}" id="message">
+			<span th:case="ALERT" th:text="${message}" class="alert alert-danger">エラー時のメッセージ</span>
+		</div>
+
+		<br />
+
+		<form action="/ModifyArticle" method="get" class="col-auto">
+			<input type="hidden" name="id" th:value="${article.id}" id="id" />
+			<input type="hidden" name="date" th:value="${article.date}" id="date" />
+			<!-- 5.タイトルラベル -->
+			<div>タイトル</div>
+			<!-- 6.タイトル入力ボックス -->
+			<div>
+				<input type="text" name="title" maxlength="30" class="form-control" th:value="${article.title}" id="title" />
+			</div>
+			<!-- 7.本文ラベル -->
+			<div>本文</div>
+			<!-- 8.本文入力エリア -->
+			<div>
+				<textarea name="content" maxlength="1000" class="form-control" rows="12" th:text="${article.content}" id="content"></textarea>
+			</div>
+			<div class="text-right">
+				<!-- 10.削除ボタン -->
+				<input type="submit" name="delete" value="削除" class="btn btn-primary" />
+				<!-- 9.編集ボタン -->
+				<input type="submit" name="modify" value="編集" class="btn btn-primary" />
+			</div>
+		</form>
+
+	</div>
+
+</body>
+</html>

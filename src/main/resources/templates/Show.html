@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>記事一覧</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+</head>
+<body>
+
+	<div class="mx-5 my-3">
+
+		<div class="row justify-content-between">
+			<!-- 1.タイトル -->
+			<h1 class="col-auto">記事一覧</h1>
+			<!-- 2.作成ボタン -->
+			<div class="col-auto align-self-center">
+				<a class="btn btn-primary" href="CreateArticle">作成</a>
+			</div>
+
+		</div>
+
+		<!-- 3.横線 -->
+		<hr />
+
+		<!-- 4.メッセージ -->
+		<div th:switch="${messageType.name()}" id="message">
+			<span th:case="ALERT" th:text="${message}" class="alert alert-danger">エラー時のメッセージ</span>
+			<span th:case="INFORMATION" th:text="${message}" class="alert alert-primary">通常のメッセージ</span>
+		</div>
+
+		<br />
+
+		<article th:each="article : ${articles}" th:id="'article'+${articleStat.count}" class="col-auto">
+			<h2>
+				<!-- 5.タイトルラベル -->
+				<span>タイトル：</span>
+				<!-- 8.記事_タイトル -->
+				<span th:text="${article.title}" class="title">ここにタイトルが入る</span>
+			</h2>
+			<p>
+				<!-- 6.日付ラベル -->
+				<span>日付 ：</span>
+				<!-- 9.記事_日付 -->
+				<span th:text="${#dates.format(article.date, 'yyyy/MM/dd')}" class="date">2222/22/22</span>
+			</p>
+			<p>
+				<!-- 7.本文ラベル -->
+				<span>本文 ：</span>
+				<!-- 10.記事_本文 -->
+				<span th:text="${article.content}" class="content">本文。</span>
+			</p>
+			<div class="text-right">
+				<!-- 11.編集ボタン -->
+				<form method="get" action="/ModifyArticle">
+					<input type="hidden" name="id" th:value="${article.id}" class="id" />
+					<input type="submit" value="編集" class="btn btn-primary" />
+				</form>
+			</div>
+			<!-- 12.記事区切り線 -->
+			<hr />
+		</article>
+
+	</div>
+
+</body>
+</html>
