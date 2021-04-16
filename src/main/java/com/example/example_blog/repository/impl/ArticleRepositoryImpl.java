@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.example_blog.repository.ArticleDAO;
 import com.example.example_blog.repository.ArticleRepository;
-import com.example.example_blog.repository.NoPostFoundException;
+import com.example.example_blog.repository.NoArticleFoundException;
 
 /**
  * 記事リポジトリを実装するクラス
@@ -42,7 +42,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 	 * @inheritDoc：スーパクラスやインタフェースのドキュメントコメントを継承する
 	 */
 	@Override
-	public void addPost(String title, String content) {
+	public void addArticle(String title, String content) {
 
 		//タイトルがnullでも空値でもないことを確認する。
 		if (title == null || title.equals("")) {
@@ -100,7 +100,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void modifyPost(int id, String title, String content) throws NoPostFoundException {
+	public void modifyArticle(int id, String title, String content) throws NoArticleFoundException {
 
 		//タイトルがnullでも空値でもないことを確認する。
 		if (title == null || title.equals("")) {
@@ -129,7 +129,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
 
 		//記事を更新するSQL文を設定
-		final String sql = "UPDATE posts set title = :title, content = :content WHERE id = :id;";
+		final String sql = "UPDATE articles set title = :title, content = :content WHERE id = :id;";
 
 		//SQL文に入れる引数のリスト化
 		SqlParameterSource parameters = new MapSqlParameterSource("title", title)
@@ -140,9 +140,9 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 		int count = jdbcTemplate.update(sql, parameters);
 
 		//更新件数が0だった場合
-		//更新に失敗したとしてNoPostFoundExceptionをスローする
+		//更新に失敗したとしてNoArticleFoundExceptionをスローする
 		if (count == 0) {
-			throw new NoPostFoundException();
+			throw new NoArticleFoundException();
 		}
 
 	}
@@ -151,7 +151,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ArticleDAO getPost(int id) throws NoPostFoundException {
+	public ArticleDAO getArticle(int id) throws NoArticleFoundException {
 
 		//IDが1未満でないことを確認する。
 		if (id < 1) {
@@ -165,7 +165,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 		try {
 
 			//記事を取得するSQLの設定
-			final String sql = "SELECT * FROM posts WHERE id = :id;";
+			final String sql = "SELECT * FROM articles WHERE id = :id;";
 
 			//SQL文に入れる引数のリスト化
 			SqlParameterSource parameters = new MapSqlParameterSource("id", id);
@@ -179,8 +179,8 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 		} catch (IncorrectResultSizeDataAccessException e) {
 			//IncorrectResultSizeDataAccessException SQL文の実行結果が1行でない場合スローされる
 
-			//結果が取得できなかったとしてNoPostFoundExceptionをスローする
-			throw new NoPostFoundException();
+			//結果が取得できなかったとしてNoArticleFoundExceptionをスローする
+			throw new NoArticleFoundException();
 		}
 
 		//記事を返却
@@ -191,10 +191,10 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ArticleDAO> getAllPosts() {
+	public List<ArticleDAO> getAllArticles() {
 
 		//全ての記事を取得するSQLの設定
-		final String sql = "SELECT * FROM posts ORDER BY date DESC;";
+		final String sql = "SELECT * FROM articles ORDER BY date DESC;";
 
 		//SQL文に入れる引数のリスト化（引数なし）
 		SqlParameterSource parameters = new MapSqlParameterSource();
@@ -204,7 +204,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
 		//検索結果を記事オブジェクトのリストに変換する
 		//1個もなければ要素数0の記事リストを作る
-		List<ArticleDAO> postList = new ArrayList<>();
+		List<ArticleDAO> articleList = new ArrayList<>();
 
 		for (Map<String, Object> result : resultList) {
 
@@ -212,18 +212,18 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 			ArticleDAO dao = toArticleDAO(result);
 
 			//記事オブジェクトを記事リストに追加
-			postList.add(dao);
+			articleList.add(dao);
 		}
 
 		//記事リストを返却
-		return postList;
+		return articleList;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deletePost(int id) throws NoPostFoundException {
+	public void deleteArticle(int id) throws NoArticleFoundException {
 
 		//IDが1未満でないことを確認する。
 		if (id < 1) {
@@ -232,7 +232,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 
 
 		//記事を削除するSQL文を設定
-		final String sql = "DELETE FROM posts WHERE id = :id;";
+		final String sql = "DELETE FROM articles WHERE id = :id;";
 
 		//SQL文に入れる引数のリスト化
 		SqlParameterSource parameters = new MapSqlParameterSource("id", id);
@@ -241,9 +241,9 @@ public class ArticleRepositoryImpl implements ArticleRepository {
 		int count = jdbcTemplate.update(sql, parameters);
 
 		//削除件数が0だった場合
-		//削除に失敗したとしてNoPostFoundExceptionをスローする
+		//削除に失敗したとしてNoArticleFoundExceptionをスローする
 		if (count == 0) {
-			throw new NoPostFoundException();
+			throw new NoArticleFoundException();
 		}
 
 	}
